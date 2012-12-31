@@ -21,9 +21,6 @@ public class TestModelWithID extends TestCase {
   public void setUp() {
     dbs = new DatabasesImpl(DATABASE_CONNECTION1);
     postModel = new Post(0, "Test Post", 100l, 1, 0l);
-    System.out.println('a');
-    System.out.println(postModel.getFieldSet());
-    System.out.println(postModel.attributes.getFieldSet());
     imageModel = new Image(0, null, dbs);
     userModel = new User(0l, "handle", 0l, 0, 0l, 0l, "bio", null, 0.0, true);
     try {
