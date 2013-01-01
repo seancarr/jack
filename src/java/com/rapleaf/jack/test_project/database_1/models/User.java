@@ -21,10 +21,12 @@ import com.rapleaf.jack.HasOneAssociation;
 
 import com.rapleaf.jack.test_project.IDatabases;
 
-public class User extends ModelWithId<User, User.Attributes, IDatabases> {
+public class User extends ModelWithId<User, IDatabases> {
   
   public static final long serialVersionUID = 3336917395531236967L;
-
+  
+  private final Attributes attributes;
+  
   // Associations
   private HasManyAssociation<Post> __assoc_posts;
   private HasManyAssociation<Comment> __assoc_comments;
@@ -43,46 +45,28 @@ public class User extends ModelWithId<User, User.Attributes, IDatabases> {
   }
 
   public User(long id, final String handle, final Long created_at_millis, final int num_posts, final Long some_date, final Long some_datetime, final String bio, final byte[] some_binary, final Double some_float, final Boolean some_boolean, IDatabases databases) {
-    super(new Attributes(id), databases);
-    setHandle(handle);
-    setCreatedAtMillis(created_at_millis);
-    setNumPosts(num_posts);
-    setSomeDate(some_date);
-    setSomeDatetime(some_datetime);
-    setBio(bio);
-    setSomeBinary(some_binary);
-    setSomeFloat(some_float);
-    setSomeBoolean(some_boolean);
+    super(databases);
+    attributes = new Attributes(id, handle, created_at_millis, num_posts, some_date, some_datetime, bio, some_binary, some_float, some_boolean);
     this.__assoc_posts = new HasManyAssociation<Post>(databases.getDatabase1().posts(), "user_id", getId());
     this.__assoc_comments = new HasManyAssociation<Comment>(databases.getDatabase1().comments(), "commenter_id", getId());
     this.__assoc_image = new HasOneAssociation<Image>(databases.getDatabase1().images(), "user_id", getId());
   }
 
   public User(long id, final String handle, final Long created_at_millis, final int num_posts, final Long some_date, final Long some_datetime, final String bio, final byte[] some_binary, final Double some_float, final Boolean some_boolean) {
-    super(new Attributes(id), null);
-    setHandle(handle);
-    setCreatedAtMillis(created_at_millis);
-    setNumPosts(num_posts);
-    setSomeDate(some_date);
-    setSomeDatetime(some_datetime);
-    setBio(bio);
-    setSomeBinary(some_binary);
-    setSomeFloat(some_float);
-    setSomeBoolean(some_boolean);
+    super(null);
+    attributes = new Attributes(id, handle, created_at_millis, num_posts, some_date, some_datetime, bio, some_binary, some_float, some_boolean);
   }
   public User(long id, final String handle, final int num_posts, IDatabases databases) {
-    super(new Attributes(id), databases);
-    setHandle(handle);
-    setNumPosts(num_posts);
+    super(databases);
+    attributes = new Attributes(id, handle, num_posts);
     this.__assoc_posts = new HasManyAssociation<Post>(databases.getDatabase1().posts(), "user_id", getId());
     this.__assoc_comments = new HasManyAssociation<Comment>(databases.getDatabase1().comments(), "commenter_id", getId());
     this.__assoc_image = new HasOneAssociation<Image>(databases.getDatabase1().images(), "user_id", getId());
   }
 
   public User(long id, final String handle, final int num_posts) {
-    super(new Attributes(id), null);
-    setHandle(handle);
-    setNumPosts(num_posts);
+    super(null);
+    attributes = new Attributes(id, handle, num_posts);
   }
 
   public static User newDefaultInstance(long id) {
@@ -90,25 +74,8 @@ public class User extends ModelWithId<User, User.Attributes, IDatabases> {
   }
 
   public User(long id, Map<Enum, Object> fieldsMap) {
-    super(new Attributes(id), null);
-    String handle = (String) fieldsMap.get(User._Fields.handle);
-    Long created_at_millis = (Long) fieldsMap.get(User._Fields.created_at_millis);
-    int num_posts = (Integer) fieldsMap.get(User._Fields.num_posts);
-    Long some_date = (Long) fieldsMap.get(User._Fields.some_date);
-    Long some_datetime = (Long) fieldsMap.get(User._Fields.some_datetime);
-    String bio = (String) fieldsMap.get(User._Fields.bio);
-    byte[] some_binary = (byte[]) fieldsMap.get(User._Fields.some_binary);
-    Double some_float = (Double) fieldsMap.get(User._Fields.some_float);
-    Boolean some_boolean = (Boolean) fieldsMap.get(User._Fields.some_boolean);
-    setHandle(handle);
-    setCreatedAtMillis(created_at_millis);
-    setNumPosts(num_posts);
-    setSomeDate(some_date);
-    setSomeDatetime(some_datetime);
-    setBio(bio);
-    setSomeBinary(some_binary);
-    setSomeFloat(some_float);
-    setSomeBoolean(some_boolean);
+    super(null);
+    attributes = new Attributes(id, fieldsMap);
   }
 
   public User (User other) {
@@ -116,22 +83,416 @@ public class User extends ModelWithId<User, User.Attributes, IDatabases> {
   }
 
   public User (User other, IDatabases databases) {
-    super(new Attributes(other.getId()), databases);
-    setHandle(other.getHandle());
-    setCreatedAtMillis(other.getCreatedAtMillis());
-    setNumPosts(other.getNumPosts());
-    setSomeDate(other.getSomeDate());
-    setSomeDatetime(other.getSomeDatetime());
-    setBio(other.getBio());
-    setSomeBinary(copyBinary(other.getSomeBinary()));
-    setSomeFloat(other.getSomeFloat());
-    setSomeBoolean(other.isSomeBoolean());
+    super(databases);
+    attributes = new Attributes(other.getAttributes());
 
     if (databases != null) {
       this.__assoc_posts = new HasManyAssociation<Post>(databases.getDatabase1().posts(), "user_id", getId());
       this.__assoc_comments = new HasManyAssociation<Comment>(databases.getDatabase1().comments(), "commenter_id", getId());
       this.__assoc_image = new HasOneAssociation<Image>(databases.getDatabase1().images(), "user_id", getId());
     }
+  }
+  
+  public Attributes getAttributes() {
+    return attributes;
+  }
+
+  public String getHandle(){
+    return attributes.getHandle();
+  }
+
+  public User setHandle(String newval){
+    attributes.setHandle(newval);
+    cachedHashCode = 0;
+    return this;
+  }
+
+  public Long getCreatedAtMillis(){
+    return attributes.getCreatedAtMillis();
+  }
+
+  public User setCreatedAtMillis(Long newval){
+    attributes.setCreatedAtMillis(newval);
+    cachedHashCode = 0;
+    return this;
+  }
+
+  public int getNumPosts(){
+    return attributes.getNumPosts();
+  }
+
+  public User setNumPosts(int newval){
+    attributes.setNumPosts(newval);
+    cachedHashCode = 0;
+    return this;
+  }
+
+  public Long getSomeDate(){
+    return attributes.getSomeDate();
+  }
+
+  public User setSomeDate(Long newval){
+    attributes.setSomeDate(newval);
+    cachedHashCode = 0;
+    return this;
+  }
+
+  public Long getSomeDatetime(){
+    return attributes.getSomeDatetime();
+  }
+
+  public User setSomeDatetime(Long newval){
+    attributes.setSomeDatetime(newval);
+    cachedHashCode = 0;
+    return this;
+  }
+
+  public String getBio(){
+    return attributes.getBio();
+  }
+
+  public User setBio(String newval){
+    attributes.setBio(newval);
+    cachedHashCode = 0;
+    return this;
+  }
+
+  public byte[] getSomeBinary(){
+    return attributes.getSomeBinary();
+  }
+
+  public User setSomeBinary(byte[] newval){
+    attributes.setSomeBinary(newval);
+    cachedHashCode = 0;
+    return this;
+  }
+
+  public Double getSomeFloat(){
+    return attributes.getSomeFloat();
+  }
+
+  public User setSomeFloat(Double newval){
+    attributes.setSomeFloat(newval);
+    cachedHashCode = 0;
+    return this;
+  }
+
+  public Boolean isSomeBoolean(){
+    return attributes.isSomeBoolean();
+  }
+
+  public User setSomeBoolean(Boolean newval){
+    attributes.setSomeBoolean(newval);
+    cachedHashCode = 0;
+    return this;
+  }
+
+  public void setField(_Fields field, Object value) {
+    switch (field) {
+      case handle:
+        setHandle((String) value);
+        break;
+      case created_at_millis:
+        setCreatedAtMillis((Long) value);
+        break;
+      case num_posts:
+        setNumPosts((Integer) value);
+        break;
+      case some_date:
+        setSomeDate((Long) value);
+        break;
+      case some_datetime:
+        setSomeDatetime((Long) value);
+        break;
+      case bio:
+        setBio((String) value);
+        break;
+      case some_binary:
+        setSomeBinary((byte[]) value);
+        break;
+      case some_float:
+        setSomeFloat((Double) value);
+        break;
+      case some_boolean:
+        setSomeBoolean((Boolean) value);
+        break;
+      default:
+        throw new IllegalStateException("Invalid field: " + field);
+    }
+  }
+  
+  public void setField(String fieldName, Object value) {
+    if (fieldName.equals("handle")) {
+      setHandle((String)  value);
+      return;
+    }
+    if (fieldName.equals("created_at_millis")) {
+      setCreatedAtMillis((Long)  value);
+      return;
+    }
+    if (fieldName.equals("num_posts")) {
+      setNumPosts((Integer)  value);
+      return;
+    }
+    if (fieldName.equals("some_date")) {
+      setSomeDate((Long)  value);
+      return;
+    }
+    if (fieldName.equals("some_datetime")) {
+      setSomeDatetime((Long)  value);
+      return;
+    }
+    if (fieldName.equals("bio")) {
+      setBio((String)  value);
+      return;
+    }
+    if (fieldName.equals("some_binary")) {
+      setSomeBinary((byte[])  value);
+      return;
+    }
+    if (fieldName.equals("some_float")) {
+      setSomeFloat((Double)  value);
+      return;
+    }
+    if (fieldName.equals("some_boolean")) {
+      setSomeBoolean((Boolean)  value);
+      return;
+    }
+    throw new IllegalStateException("Invalid field: " + fieldName);
+  }
+
+  public static Class getFieldType(_Fields field) {
+    switch (field) {
+      case handle:
+        return String.class;
+      case created_at_millis:
+        return Long.class;
+      case num_posts:
+        return int.class;
+      case some_date:
+        return Long.class;
+      case some_datetime:
+        return Long.class;
+      case bio:
+        return String.class;
+      case some_binary:
+        return byte[].class;
+      case some_float:
+        return Double.class;
+      case some_boolean:
+        return Boolean.class;
+      default:
+        throw new IllegalStateException("Invalid field: " + field);
+    }    
+  }
+
+  public static Class getFieldType(String fieldName) {    
+    if (fieldName.equals("handle")) {
+      return String.class;
+    }
+    if (fieldName.equals("created_at_millis")) {
+      return Long.class;
+    }
+    if (fieldName.equals("num_posts")) {
+      return int.class;
+    }
+    if (fieldName.equals("some_date")) {
+      return Long.class;
+    }
+    if (fieldName.equals("some_datetime")) {
+      return Long.class;
+    }
+    if (fieldName.equals("bio")) {
+      return String.class;
+    }
+    if (fieldName.equals("some_binary")) {
+      return byte[].class;
+    }
+    if (fieldName.equals("some_float")) {
+      return Double.class;
+    }
+    if (fieldName.equals("some_boolean")) {
+      return Boolean.class;
+    }
+    throw new IllegalStateException("Invalid field name: " + fieldName);
+  }
+
+  public Set<Post> getPosts() throws IOException {
+    return __assoc_posts.get();
+  }
+
+  public Set<Comment> getComments() throws IOException {
+    return __assoc_comments.get();
+  }
+
+  public Image getImage() throws IOException {
+    return __assoc_image.get();
+  }
+
+  @Override
+  public Object getField(String fieldName) {
+    if (fieldName.equals("id")) {
+      return getId();
+    }
+    if (fieldName.equals("handle")) {
+      return getHandle();
+    }
+    if (fieldName.equals("created_at_millis")) {
+      return getCreatedAtMillis();
+    }
+    if (fieldName.equals("num_posts")) {
+      return getNumPosts();
+    }
+    if (fieldName.equals("some_date")) {
+      return getSomeDate();
+    }
+    if (fieldName.equals("some_datetime")) {
+      return getSomeDatetime();
+    }
+    if (fieldName.equals("bio")) {
+      return getBio();
+    }
+    if (fieldName.equals("some_binary")) {
+      return getSomeBinary();
+    }
+    if (fieldName.equals("some_float")) {
+      return getSomeFloat();
+    }
+    if (fieldName.equals("some_boolean")) {
+      return isSomeBoolean();
+    }
+    throw new IllegalStateException("Invalid field name: " + fieldName);
+  }
+
+  public Object getField(_Fields field) {
+    switch (field) {
+      case handle:
+        return getHandle();
+      case created_at_millis:
+        return getCreatedAtMillis();
+      case num_posts:
+        return getNumPosts();
+      case some_date:
+        return getSomeDate();
+      case some_datetime:
+        return getSomeDatetime();
+      case bio:
+        return getBio();
+      case some_binary:
+        return getSomeBinary();
+      case some_float:
+        return getSomeFloat();
+      case some_boolean:
+        return isSomeBoolean();
+    }
+    throw new IllegalStateException("Invalid field: " + field);
+  }
+  
+  public boolean hasField(String fieldName) {
+    if (fieldName.equals("id")) {
+      return true;
+    }
+    if (fieldName.equals("handle")) {
+      return true;
+    }
+    if (fieldName.equals("created_at_millis")) {
+      return true;
+    }
+    if (fieldName.equals("num_posts")) {
+      return true;
+    }
+    if (fieldName.equals("some_date")) {
+      return true;
+    }
+    if (fieldName.equals("some_datetime")) {
+      return true;
+    }
+    if (fieldName.equals("bio")) {
+      return true;
+    }
+    if (fieldName.equals("some_binary")) {
+      return true;
+    }
+    if (fieldName.equals("some_float")) {
+      return true;
+    }
+    if (fieldName.equals("some_boolean")) {
+      return true;
+    }
+    return false;
+  }
+
+  public static Object getDefaultValue(_Fields field) {
+    switch (field) {
+      case handle:
+        return null;
+      case created_at_millis:
+        return null;
+      case num_posts:
+        return null;
+      case some_date:
+        return null;
+      case some_datetime:
+        return null;
+      case bio:
+        return null;
+      case some_binary:
+        return null;
+      case some_float:
+        return null;
+      case some_boolean:
+        return null;
+    }
+    throw new IllegalStateException("Invalid field: " + field);
+  }
+
+  @Override
+  public Set<Enum> getFieldSet() {
+    Set set = EnumSet.allOf(_Fields.class);
+    return set;
+  }
+
+  @Override
+  public User getCopy() {
+    return getCopy(databases);
+  }
+
+  @Override
+  public User getCopy(IDatabases databases) {
+    return new User(this, databases);
+  }
+
+  @Override
+  public boolean save() throws IOException {
+    return databases.getDatabase1().users().save(this);
+  }
+
+  public Image createImage() throws IOException {
+    Image previous = getImage(); 
+    if (previous != null) {
+      previous.setUserId(null);  
+      previous.save();
+    }
+           
+    Integer user_id = safeLongToInt(getId());
+    Image newImage = databases.getDatabase1().images().create(user_id);
+    save();
+    __assoc_image.clearCache();
+    return newImage;
+  }
+
+  public String toString() {
+    return "<User"
+      + " handle: " + getHandle()
+      + " created_at_millis: " + getCreatedAtMillis()
+      + " num_posts: " + getNumPosts()
+      + " some_date: " + getSomeDate()
+      + " some_datetime: " + getSomeDatetime()
+      + " bio: " + getBio()
+      + " some_binary: " + getSomeBinary()
+      + " some_float: " + getSomeFloat()
+      + " some_boolean: " + isSomeBoolean()
+      + ">";
   }
   
   public static class Attributes extends AttributesWithId {
@@ -553,403 +914,19 @@ public class User extends ModelWithId<User, User.Attributes, IDatabases> {
       return set;
     }
     
-  }
-
-  public String getHandle(){
-    return attributes.getHandle();
-  }
-
-  public User setHandle(String newval){
-    attributes.setHandle(newval);
-    cachedHashCode = 0;
-    return this;
-  }
-
-  public Long getCreatedAtMillis(){
-    return attributes.getCreatedAtMillis();
-  }
-
-  public User setCreatedAtMillis(Long newval){
-    attributes.setCreatedAtMillis(newval);
-    cachedHashCode = 0;
-    return this;
-  }
-
-  public int getNumPosts(){
-    return attributes.getNumPosts();
-  }
-
-  public User setNumPosts(int newval){
-    attributes.setNumPosts(newval);
-    cachedHashCode = 0;
-    return this;
-  }
-
-  public Long getSomeDate(){
-    return attributes.getSomeDate();
-  }
-
-  public User setSomeDate(Long newval){
-    attributes.setSomeDate(newval);
-    cachedHashCode = 0;
-    return this;
-  }
-
-  public Long getSomeDatetime(){
-    return attributes.getSomeDatetime();
-  }
-
-  public User setSomeDatetime(Long newval){
-    attributes.setSomeDatetime(newval);
-    cachedHashCode = 0;
-    return this;
-  }
-
-  public String getBio(){
-    return attributes.getBio();
-  }
-
-  public User setBio(String newval){
-    attributes.setBio(newval);
-    cachedHashCode = 0;
-    return this;
-  }
-
-  public byte[] getSomeBinary(){
-    return attributes.getSomeBinary();
-  }
-
-  public User setSomeBinary(byte[] newval){
-    attributes.setSomeBinary(newval);
-    cachedHashCode = 0;
-    return this;
-  }
-
-  public Double getSomeFloat(){
-    return attributes.getSomeFloat();
-  }
-
-  public User setSomeFloat(Double newval){
-    attributes.setSomeFloat(newval);
-    cachedHashCode = 0;
-    return this;
-  }
-
-  public Boolean isSomeBoolean(){
-    return attributes.isSomeBoolean();
-  }
-
-  public User setSomeBoolean(Boolean newval){
-    attributes.setSomeBoolean(newval);
-    cachedHashCode = 0;
-    return this;
-  }
-
-  public void setField(_Fields field, Object value) {
-    switch (field) {
-      case handle:
-        setHandle((String) value);
-        break;
-      case created_at_millis:
-        setCreatedAtMillis((Long) value);
-        break;
-      case num_posts:
-        setNumPosts((Integer) value);
-        break;
-      case some_date:
-        setSomeDate((Long) value);
-        break;
-      case some_datetime:
-        setSomeDatetime((Long) value);
-        break;
-      case bio:
-        setBio((String) value);
-        break;
-      case some_binary:
-        setSomeBinary((byte[]) value);
-        break;
-      case some_float:
-        setSomeFloat((Double) value);
-        break;
-      case some_boolean:
-        setSomeBoolean((Boolean) value);
-        break;
-      default:
-        throw new IllegalStateException("Invalid field: " + field);
+    public String toString() {
+      return "<User.Attributes"
+        + " handle: " + getHandle()
+        + " created_at_millis: " + getCreatedAtMillis()
+        + " num_posts: " + getNumPosts()
+        + " some_date: " + getSomeDate()
+        + " some_datetime: " + getSomeDatetime()
+        + " bio: " + getBio()
+        + " some_binary: " + getSomeBinary()
+        + " some_float: " + getSomeFloat()
+        + " some_boolean: " + isSomeBoolean()
+        + ">";
     }
   }
   
-  public void setField(String fieldName, Object value) {
-    if (fieldName.equals("handle")) {
-      setHandle((String)  value);
-      return;
-    }
-    if (fieldName.equals("created_at_millis")) {
-      setCreatedAtMillis((Long)  value);
-      return;
-    }
-    if (fieldName.equals("num_posts")) {
-      setNumPosts((Integer)  value);
-      return;
-    }
-    if (fieldName.equals("some_date")) {
-      setSomeDate((Long)  value);
-      return;
-    }
-    if (fieldName.equals("some_datetime")) {
-      setSomeDatetime((Long)  value);
-      return;
-    }
-    if (fieldName.equals("bio")) {
-      setBio((String)  value);
-      return;
-    }
-    if (fieldName.equals("some_binary")) {
-      setSomeBinary((byte[])  value);
-      return;
-    }
-    if (fieldName.equals("some_float")) {
-      setSomeFloat((Double)  value);
-      return;
-    }
-    if (fieldName.equals("some_boolean")) {
-      setSomeBoolean((Boolean)  value);
-      return;
-    }
-    throw new IllegalStateException("Invalid field: " + fieldName);
-  }
-
-  public static Class getFieldType(_Fields field) {
-    switch (field) {
-      case handle:
-        return String.class;
-      case created_at_millis:
-        return Long.class;
-      case num_posts:
-        return int.class;
-      case some_date:
-        return Long.class;
-      case some_datetime:
-        return Long.class;
-      case bio:
-        return String.class;
-      case some_binary:
-        return byte[].class;
-      case some_float:
-        return Double.class;
-      case some_boolean:
-        return Boolean.class;
-      default:
-        throw new IllegalStateException("Invalid field: " + field);
-    }    
-  }
-
-  public static Class getFieldType(String fieldName) {    
-    if (fieldName.equals("handle")) {
-      return String.class;
-    }
-    if (fieldName.equals("created_at_millis")) {
-      return Long.class;
-    }
-    if (fieldName.equals("num_posts")) {
-      return int.class;
-    }
-    if (fieldName.equals("some_date")) {
-      return Long.class;
-    }
-    if (fieldName.equals("some_datetime")) {
-      return Long.class;
-    }
-    if (fieldName.equals("bio")) {
-      return String.class;
-    }
-    if (fieldName.equals("some_binary")) {
-      return byte[].class;
-    }
-    if (fieldName.equals("some_float")) {
-      return Double.class;
-    }
-    if (fieldName.equals("some_boolean")) {
-      return Boolean.class;
-    }
-    throw new IllegalStateException("Invalid field name: " + fieldName);
-  }
-
-  public Set<Post> getPosts() throws IOException {
-    return __assoc_posts.get();
-  }
-
-  public Set<Comment> getComments() throws IOException {
-    return __assoc_comments.get();
-  }
-
-  public Image getImage() throws IOException {
-    return __assoc_image.get();
-  }
-
-  @Override
-  public Object getField(String fieldName) {
-    if (fieldName.equals("id")) {
-      return getId();
-    }
-    if (fieldName.equals("handle")) {
-      return getHandle();
-    }
-    if (fieldName.equals("created_at_millis")) {
-      return getCreatedAtMillis();
-    }
-    if (fieldName.equals("num_posts")) {
-      return getNumPosts();
-    }
-    if (fieldName.equals("some_date")) {
-      return getSomeDate();
-    }
-    if (fieldName.equals("some_datetime")) {
-      return getSomeDatetime();
-    }
-    if (fieldName.equals("bio")) {
-      return getBio();
-    }
-    if (fieldName.equals("some_binary")) {
-      return getSomeBinary();
-    }
-    if (fieldName.equals("some_float")) {
-      return getSomeFloat();
-    }
-    if (fieldName.equals("some_boolean")) {
-      return isSomeBoolean();
-    }
-    throw new IllegalStateException("Invalid field name: " + fieldName);
-  }
-
-  public Object getField(_Fields field) {
-    switch (field) {
-      case handle:
-        return getHandle();
-      case created_at_millis:
-        return getCreatedAtMillis();
-      case num_posts:
-        return getNumPosts();
-      case some_date:
-        return getSomeDate();
-      case some_datetime:
-        return getSomeDatetime();
-      case bio:
-        return getBio();
-      case some_binary:
-        return getSomeBinary();
-      case some_float:
-        return getSomeFloat();
-      case some_boolean:
-        return isSomeBoolean();
-    }
-    throw new IllegalStateException("Invalid field: " + field);
-  }
-  
-  public boolean hasField(String fieldName) {
-    if (fieldName.equals("id")) {
-      return true;
-    }
-    if (fieldName.equals("handle")) {
-      return true;
-    }
-    if (fieldName.equals("created_at_millis")) {
-      return true;
-    }
-    if (fieldName.equals("num_posts")) {
-      return true;
-    }
-    if (fieldName.equals("some_date")) {
-      return true;
-    }
-    if (fieldName.equals("some_datetime")) {
-      return true;
-    }
-    if (fieldName.equals("bio")) {
-      return true;
-    }
-    if (fieldName.equals("some_binary")) {
-      return true;
-    }
-    if (fieldName.equals("some_float")) {
-      return true;
-    }
-    if (fieldName.equals("some_boolean")) {
-      return true;
-    }
-    return false;
-  }
-
-  public static Object getDefaultValue(_Fields field) {
-    switch (field) {
-      case handle:
-        return null;
-      case created_at_millis:
-        return null;
-      case num_posts:
-        return null;
-      case some_date:
-        return null;
-      case some_datetime:
-        return null;
-      case bio:
-        return null;
-      case some_binary:
-        return null;
-      case some_float:
-        return null;
-      case some_boolean:
-        return null;
-    }
-    throw new IllegalStateException("Invalid field: " + field);
-  }
-
-  @Override
-  public Set<Enum> getFieldSet() {
-    Set set = EnumSet.allOf(_Fields.class);
-    return set;
-  }
-
-  @Override
-  public User getCopy() {
-    return getCopy(databases);
-  }
-
-  @Override
-  public User getCopy(IDatabases databases) {
-    return new User(this, databases);
-  }
-
-  @Override
-  public boolean save() throws IOException {
-    return databases.getDatabase1().users().save(this);
-  }
-
-  public Image createImage() throws IOException {
-    Image previous = getImage(); 
-    if (previous != null) {
-      previous.setUserId(null);  
-      previous.save();
-    }
-           
-    Integer user_id = safeLongToInt(getId());
-    Image newImage = databases.getDatabase1().images().create(user_id);
-    save();
-    __assoc_image.clearCache();
-    return newImage;
-  }
-
-  public String toString() {
-    return "<User"
-      + " handle: " + getHandle()
-      + " created_at_millis: " + getCreatedAtMillis()
-      + " num_posts: " + getNumPosts()
-      + " some_date: " + getSomeDate()
-      + " some_datetime: " + getSomeDatetime()
-      + " bio: " + getBio()
-      + " some_binary: " + getSomeBinary()
-      + " some_float: " + getSomeFloat()
-      + " some_boolean: " + isSomeBoolean()
-      + ">";
-  }
 }

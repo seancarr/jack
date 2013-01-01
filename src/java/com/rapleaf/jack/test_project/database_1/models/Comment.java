@@ -21,10 +21,12 @@ import com.rapleaf.jack.HasOneAssociation;
 
 import com.rapleaf.jack.test_project.IDatabases;
 
-public class Comment extends ModelWithId<Comment, Comment.Attributes, IDatabases> {
+public class Comment extends ModelWithId<Comment, IDatabases> {
   
   public static final long serialVersionUID = 6213989608937906012L;
-
+  
+  private final Attributes attributes;
+  
   // Associations
   private BelongsToAssociation<User> __assoc_user;
   private BelongsToAssociation<Post> __assoc_post;
@@ -37,36 +39,26 @@ public class Comment extends ModelWithId<Comment, Comment.Attributes, IDatabases
   }
 
   public Comment(long id, final String content, final int commenter_id, final long commented_on_id, final long created_at, IDatabases databases) {
-    super(new Attributes(id), databases);
-    setContent(content);
-    setCommenterId(commenter_id);
-    setCommentedOnId(commented_on_id);
-    setCreatedAt(created_at);
+    super(databases);
+    attributes = new Attributes(id, content, commenter_id, commented_on_id, created_at);
     this.__assoc_user = new BelongsToAssociation<User>(databases.getDatabase1().users(), (long) getCommenterId());
     this.__assoc_post = new BelongsToAssociation<Post>(databases.getDatabase1().posts(), getCommentedOnId());
   }
 
   public Comment(long id, final String content, final int commenter_id, final long commented_on_id, final long created_at) {
-    super(new Attributes(id), null);
-    setContent(content);
-    setCommenterId(commenter_id);
-    setCommentedOnId(commented_on_id);
-    setCreatedAt(created_at);
+    super(null);
+    attributes = new Attributes(id, content, commenter_id, commented_on_id, created_at);
   }
   public Comment(long id, final int commenter_id, final long commented_on_id, final long created_at, IDatabases databases) {
-    super(new Attributes(id), databases);
-    setCommenterId(commenter_id);
-    setCommentedOnId(commented_on_id);
-    setCreatedAt(created_at);
+    super(databases);
+    attributes = new Attributes(id, commenter_id, commented_on_id, created_at);
     this.__assoc_user = new BelongsToAssociation<User>(databases.getDatabase1().users(), (long) getCommenterId());
     this.__assoc_post = new BelongsToAssociation<Post>(databases.getDatabase1().posts(), getCommentedOnId());
   }
 
   public Comment(long id, final int commenter_id, final long commented_on_id, final long created_at) {
-    super(new Attributes(id), null);
-    setCommenterId(commenter_id);
-    setCommentedOnId(commented_on_id);
-    setCreatedAt(created_at);
+    super(null);
+    attributes = new Attributes(id, commenter_id, commented_on_id, created_at);
   }
 
   public static Comment newDefaultInstance(long id) {
@@ -74,16 +66,8 @@ public class Comment extends ModelWithId<Comment, Comment.Attributes, IDatabases
   }
 
   public Comment(long id, Map<Enum, Object> fieldsMap) {
-    super(new Attributes(id), null);
-    String content = (String) fieldsMap.get(Comment._Fields.content);
-    int commenter_id = (Integer) fieldsMap.get(Comment._Fields.commenter_id);
-    long commented_on_id = (Long) fieldsMap.get(Comment._Fields.commented_on_id);
-    Long created_at_tmp = (Long) fieldsMap.get(Comment._Fields.created_at);
-    long created_at = created_at_tmp == null ? 28800000 : created_at_tmp;
-    setContent(content);
-    setCommenterId(commenter_id);
-    setCommentedOnId(commented_on_id);
-    setCreatedAt(created_at);
+    super(null);
+    attributes = new Attributes(id, fieldsMap);
   }
 
   public Comment (Comment other) {
@@ -91,11 +75,8 @@ public class Comment extends ModelWithId<Comment, Comment.Attributes, IDatabases
   }
 
   public Comment (Comment other, IDatabases databases) {
-    super(new Attributes(other.getId()), databases);
-    setContent(other.getContent());
-    setCommenterId(other.getCommenterId());
-    setCommentedOnId(other.getCommentedOnId());
-    setCreatedAt(other.getCreatedAt());
+    super(databases);
+    attributes = new Attributes(other.getAttributes());
 
     if (databases != null) {
       this.__assoc_user = new BelongsToAssociation<User>(databases.getDatabase1().users(), (long) getCommenterId());
@@ -103,242 +84,8 @@ public class Comment extends ModelWithId<Comment, Comment.Attributes, IDatabases
     }
   }
   
-  public static class Attributes extends AttributesWithId {
-    
-    public static final long serialVersionUID = -2156535913590481279L;
-
-    // Fields
-    private String __content;
-    private int __commenter_id;
-    private long __commented_on_id;
-    private long __created_at;
-
-    public Attributes(long id) {
-      super(id);
-    }
-
-    public Attributes(long id, final String content, final int commenter_id, final long commented_on_id, final long created_at) {
-      super(id);
-      this.__content = content;
-      this.__commenter_id = commenter_id;
-      this.__commented_on_id = commented_on_id;
-      this.__created_at = created_at;
-    }
-    public Attributes(long id, final int commenter_id, final long commented_on_id, final long created_at) {
-      super(id);
-      this.__commenter_id = commenter_id;
-      this.__commented_on_id = commented_on_id;
-      this.__created_at = created_at;
-    }
-
-    public static Attributes newDefaultInstance(long id) {
-      return new Attributes(id, 0, 0L, 0L);
-    }
-
-    public Attributes(long id, Map<Enum, Object> fieldsMap) {
-      super(id);
-      String content = (String) fieldsMap.get(Comment._Fields.content);
-      int commenter_id = (Integer) fieldsMap.get(Comment._Fields.commenter_id);
-      long commented_on_id = (Long) fieldsMap.get(Comment._Fields.commented_on_id);
-      Long created_at_tmp = (Long) fieldsMap.get(Comment._Fields.created_at);
-      long created_at = created_at_tmp == null ? 28800000 : created_at_tmp;
-      this.__content = content;
-      this.__commenter_id = commenter_id;
-      this.__commented_on_id = commented_on_id;
-      this.__created_at = created_at;
-    }
-
-    public Attributes(Attributes other) {
-      super(other.getId());
-      this.__content = other.getContent();
-      this.__commenter_id = other.getCommenterId();
-      this.__commented_on_id = other.getCommentedOnId();
-      this.__created_at = other.getCreatedAt();
-    }
-
-    public String getContent(){
-      return __content;
-    }
-
-    public Attributes setContent(String newval){
-      this.__content = newval;
-      cachedHashCode = 0;
-      return this;
-    }
-
-    public int getCommenterId(){
-      return __commenter_id;
-    }
-
-    public Attributes setCommenterId(int newval){
-      this.__commenter_id = newval;
-      cachedHashCode = 0;
-      return this;
-    }
-
-    public long getCommentedOnId(){
-      return __commented_on_id;
-    }
-
-    public Attributes setCommentedOnId(long newval){
-      this.__commented_on_id = newval;
-      cachedHashCode = 0;
-      return this;
-    }
-
-    public long getCreatedAt(){
-      return __created_at;
-    }
-
-    public Attributes setCreatedAt(long newval){
-      this.__created_at = newval;
-      cachedHashCode = 0;
-      return this;
-    }
-
-    public void setField(_Fields field, Object value) {
-      switch (field) {
-        case content:
-          setContent((String) value);
-          break;
-        case commenter_id:
-          setCommenterId((Integer) value);
-          break;
-        case commented_on_id:
-          setCommentedOnId((Long) value);
-          break;
-        case created_at:
-          setCreatedAt((Long) value);
-          break;
-        default:
-          throw new IllegalStateException("Invalid field: " + field);
-      }
-    }
-
-    public void setField(String fieldName, Object value) {
-      if (fieldName.equals("content")) {
-        setContent((String)  value);
-        return;
-      }
-      if (fieldName.equals("commenter_id")) {
-        setCommenterId((Integer)  value);
-        return;
-      }
-      if (fieldName.equals("commented_on_id")) {
-        setCommentedOnId((Long)  value);
-        return;
-      }
-      if (fieldName.equals("created_at")) {
-        setCreatedAt((Long)  value);
-        return;
-      }
-      throw new IllegalStateException("Invalid field: " + fieldName);
-    }
-
-    public static Class getFieldType(_Fields field) {
-      switch (field) {
-        case content:
-          return String.class;
-        case commenter_id:
-          return int.class;
-        case commented_on_id:
-          return long.class;
-        case created_at:
-          return long.class;
-        default:
-          throw new IllegalStateException("Invalid field: " + field);
-      }    
-    }
-
-    public static Class getFieldType(String fieldName) {    
-      if (fieldName.equals("content")) {
-        return String.class;
-      }
-      if (fieldName.equals("commenter_id")) {
-        return int.class;
-      }
-      if (fieldName.equals("commented_on_id")) {
-        return long.class;
-      }
-      if (fieldName.equals("created_at")) {
-        return long.class;
-      }
-      throw new IllegalStateException("Invalid field name: " + fieldName);
-    }
-
-    @Override
-    public Object getField(String fieldName) {
-      if (fieldName.equals("id")) {
-        return getId();
-      }
-      if (fieldName.equals("content")) {
-        return getContent();
-      }
-      if (fieldName.equals("commenter_id")) {
-        return getCommenterId();
-      }
-      if (fieldName.equals("commented_on_id")) {
-        return getCommentedOnId();
-      }
-      if (fieldName.equals("created_at")) {
-        return getCreatedAt();
-      }
-      throw new IllegalStateException("Invalid field name: " + fieldName);
-    }
-
-    public Object getField(_Fields field) {
-      switch (field) {
-        case content:
-          return getContent();
-        case commenter_id:
-          return getCommenterId();
-        case commented_on_id:
-          return getCommentedOnId();
-        case created_at:
-          return getCreatedAt();
-      }
-      throw new IllegalStateException("Invalid field: " + field);
-    }
-
-    public boolean hasField(String fieldName) {
-      if (fieldName.equals("id")) {
-        return true;
-      }
-      if (fieldName.equals("content")) {
-        return true;
-      }
-      if (fieldName.equals("commenter_id")) {
-        return true;
-      }
-      if (fieldName.equals("commented_on_id")) {
-        return true;
-      }
-      if (fieldName.equals("created_at")) {
-        return true;
-      }
-      return false;
-    }
-
-    public static Object getDefaultValue(_Fields field) {
-      switch (field) {
-        case content:
-          return null;
-        case commenter_id:
-          return null;
-        case commented_on_id:
-          return null;
-        case created_at:
-          return 28800000;
-      }
-      throw new IllegalStateException("Invalid field: " + field);
-    }
-    
-    @Override
-    public Set<Enum> getFieldSet() {
-      Set set = EnumSet.allOf(_Fields.class);
-      return set;
-    }
-    
+  public Attributes getAttributes() {
+    return attributes;
   }
 
   public String getContent(){
@@ -606,4 +353,251 @@ public class Comment extends ModelWithId<Comment, Comment.Attributes, IDatabases
       + " created_at: " + getCreatedAt()
       + ">";
   }
+  
+  public static class Attributes extends AttributesWithId {
+    
+    public static final long serialVersionUID = -2156535913590481279L;
+
+    // Fields
+    private String __content;
+    private int __commenter_id;
+    private long __commented_on_id;
+    private long __created_at;
+
+    public Attributes(long id) {
+      super(id);
+    }
+
+    public Attributes(long id, final String content, final int commenter_id, final long commented_on_id, final long created_at) {
+      super(id);
+      this.__content = content;
+      this.__commenter_id = commenter_id;
+      this.__commented_on_id = commented_on_id;
+      this.__created_at = created_at;
+    }
+    public Attributes(long id, final int commenter_id, final long commented_on_id, final long created_at) {
+      super(id);
+      this.__commenter_id = commenter_id;
+      this.__commented_on_id = commented_on_id;
+      this.__created_at = created_at;
+    }
+
+    public static Attributes newDefaultInstance(long id) {
+      return new Attributes(id, 0, 0L, 0L);
+    }
+
+    public Attributes(long id, Map<Enum, Object> fieldsMap) {
+      super(id);
+      String content = (String) fieldsMap.get(Comment._Fields.content);
+      int commenter_id = (Integer) fieldsMap.get(Comment._Fields.commenter_id);
+      long commented_on_id = (Long) fieldsMap.get(Comment._Fields.commented_on_id);
+      Long created_at_tmp = (Long) fieldsMap.get(Comment._Fields.created_at);
+      long created_at = created_at_tmp == null ? 28800000 : created_at_tmp;
+      this.__content = content;
+      this.__commenter_id = commenter_id;
+      this.__commented_on_id = commented_on_id;
+      this.__created_at = created_at;
+    }
+
+    public Attributes(Attributes other) {
+      super(other.getId());
+      this.__content = other.getContent();
+      this.__commenter_id = other.getCommenterId();
+      this.__commented_on_id = other.getCommentedOnId();
+      this.__created_at = other.getCreatedAt();
+    }
+
+    public String getContent(){
+      return __content;
+    }
+
+    public Attributes setContent(String newval){
+      this.__content = newval;
+      cachedHashCode = 0;
+      return this;
+    }
+
+    public int getCommenterId(){
+      return __commenter_id;
+    }
+
+    public Attributes setCommenterId(int newval){
+      this.__commenter_id = newval;
+      cachedHashCode = 0;
+      return this;
+    }
+
+    public long getCommentedOnId(){
+      return __commented_on_id;
+    }
+
+    public Attributes setCommentedOnId(long newval){
+      this.__commented_on_id = newval;
+      cachedHashCode = 0;
+      return this;
+    }
+
+    public long getCreatedAt(){
+      return __created_at;
+    }
+
+    public Attributes setCreatedAt(long newval){
+      this.__created_at = newval;
+      cachedHashCode = 0;
+      return this;
+    }
+
+    public void setField(_Fields field, Object value) {
+      switch (field) {
+        case content:
+          setContent((String) value);
+          break;
+        case commenter_id:
+          setCommenterId((Integer) value);
+          break;
+        case commented_on_id:
+          setCommentedOnId((Long) value);
+          break;
+        case created_at:
+          setCreatedAt((Long) value);
+          break;
+        default:
+          throw new IllegalStateException("Invalid field: " + field);
+      }
+    }
+
+    public void setField(String fieldName, Object value) {
+      if (fieldName.equals("content")) {
+        setContent((String)  value);
+        return;
+      }
+      if (fieldName.equals("commenter_id")) {
+        setCommenterId((Integer)  value);
+        return;
+      }
+      if (fieldName.equals("commented_on_id")) {
+        setCommentedOnId((Long)  value);
+        return;
+      }
+      if (fieldName.equals("created_at")) {
+        setCreatedAt((Long)  value);
+        return;
+      }
+      throw new IllegalStateException("Invalid field: " + fieldName);
+    }
+
+    public static Class getFieldType(_Fields field) {
+      switch (field) {
+        case content:
+          return String.class;
+        case commenter_id:
+          return int.class;
+        case commented_on_id:
+          return long.class;
+        case created_at:
+          return long.class;
+        default:
+          throw new IllegalStateException("Invalid field: " + field);
+      }    
+    }
+
+    public static Class getFieldType(String fieldName) {    
+      if (fieldName.equals("content")) {
+        return String.class;
+      }
+      if (fieldName.equals("commenter_id")) {
+        return int.class;
+      }
+      if (fieldName.equals("commented_on_id")) {
+        return long.class;
+      }
+      if (fieldName.equals("created_at")) {
+        return long.class;
+      }
+      throw new IllegalStateException("Invalid field name: " + fieldName);
+    }
+
+    @Override
+    public Object getField(String fieldName) {
+      if (fieldName.equals("id")) {
+        return getId();
+      }
+      if (fieldName.equals("content")) {
+        return getContent();
+      }
+      if (fieldName.equals("commenter_id")) {
+        return getCommenterId();
+      }
+      if (fieldName.equals("commented_on_id")) {
+        return getCommentedOnId();
+      }
+      if (fieldName.equals("created_at")) {
+        return getCreatedAt();
+      }
+      throw new IllegalStateException("Invalid field name: " + fieldName);
+    }
+
+    public Object getField(_Fields field) {
+      switch (field) {
+        case content:
+          return getContent();
+        case commenter_id:
+          return getCommenterId();
+        case commented_on_id:
+          return getCommentedOnId();
+        case created_at:
+          return getCreatedAt();
+      }
+      throw new IllegalStateException("Invalid field: " + field);
+    }
+
+    public boolean hasField(String fieldName) {
+      if (fieldName.equals("id")) {
+        return true;
+      }
+      if (fieldName.equals("content")) {
+        return true;
+      }
+      if (fieldName.equals("commenter_id")) {
+        return true;
+      }
+      if (fieldName.equals("commented_on_id")) {
+        return true;
+      }
+      if (fieldName.equals("created_at")) {
+        return true;
+      }
+      return false;
+    }
+
+    public static Object getDefaultValue(_Fields field) {
+      switch (field) {
+        case content:
+          return null;
+        case commenter_id:
+          return null;
+        case commented_on_id:
+          return null;
+        case created_at:
+          return 28800000;
+      }
+      throw new IllegalStateException("Invalid field: " + field);
+    }
+    
+    @Override
+    public Set<Enum> getFieldSet() {
+      Set set = EnumSet.allOf(_Fields.class);
+      return set;
+    }
+    
+    public String toString() {
+      return "<Comment.Attributes"
+        + " content: " + getContent()
+        + " commenter_id: " + getCommenterId()
+        + " commented_on_id: " + getCommentedOnId()
+        + " created_at: " + getCreatedAt()
+        + ">";
+    }
+  }
+  
 }

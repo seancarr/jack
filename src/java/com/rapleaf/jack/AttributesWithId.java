@@ -51,11 +51,11 @@ public abstract class AttributesWithId {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    ModelWithId other = (ModelWithId) obj;
+    AttributesWithId other = (AttributesWithId) obj;
     return equals(other);
   }
 
-  public boolean equals(ModelWithId obj) {
+  public boolean equals(AttributesWithId obj) {
     if(obj == null) return false;
     if(!this.getClass().getName().equals(obj.getClass().getName())) {
       return false;
