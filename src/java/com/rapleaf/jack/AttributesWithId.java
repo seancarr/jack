@@ -2,6 +2,7 @@ package com.rapleaf.jack;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.util.Set;
 
@@ -12,7 +13,7 @@ import java.util.Set;
  * Time: 10:51 AM
  * To change this template use File | Settings | File Templates.
  */
-public abstract class AttributesWithId {
+public abstract class AttributesWithId implements Serializable {
 
   private final long id;
   transient protected int cachedHashCode = 0;
